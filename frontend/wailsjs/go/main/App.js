@@ -34,6 +34,10 @@ export function SetTargetActive(arg1, arg2) {
   return window['go']['main']['App']['SetTargetActive'](arg1, arg2);
 }
 
+export function SetTargetDiagramVisibility(arg1, arg2) {
+  return window['go']['main']['App']['SetTargetDiagramVisibility'](arg1, arg2);
+}
+
 export function UpdateConfig(arg1) {
   return window['go']['main']['App']['UpdateConfig'](arg1);
 }

@@ -125,3 +125,16 @@ func (c *ConfigManager) UpdateConfig(newCfg AppConfig) {
 	defer c.mu.Unlock()
 	c.Data = newCfg
 }
+
+func (c *ConfigManager) UpdateTargetDiagramVisibility(id string, show bool) error {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	for i, t := range c.Data.Targets {
+		if t.ID == id {
+			c.Data.Targets[i].ShowInDiagram = show
+			break
+		}
+	}
+	return c.Save()
+}

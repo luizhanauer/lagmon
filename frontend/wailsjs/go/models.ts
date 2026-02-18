@@ -94,6 +94,7 @@ export namespace domain {
 	    ip: string;
 	    isGateway: boolean;
 	    active: boolean;
+	    showInDiagram: boolean;
 	
 	    static createFrom(source: any = {}) {
 	        return new Host(source);
@@ -106,6 +107,7 @@ export namespace domain {
 	        this.ip = source["ip"];
 	        this.isGateway = source["isGateway"];
 	        this.active = source["active"];
+	        this.showInDiagram = source["showInDiagram"];
 	    }
 	}
 

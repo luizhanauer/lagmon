@@ -11,7 +11,6 @@ const visibleTargets = computed(() => store.targets.filter(t => t.showGraph));
     <div class="flex flex-col gap-6 w-full">
         
         <div class="w-full">
-            <h2 class="text-xs font-mono text-gray-500 mb-2 uppercase tracking-wider">// Network Topology</h2>
             <NetworkDiagram />
         </div>
 

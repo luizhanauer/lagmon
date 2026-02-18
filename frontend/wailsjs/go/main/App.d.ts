@@ -19,4 +19,6 @@ export function RemoveTarget(arg1:string):Promise<void>;
 
 export function SetTargetActive(arg1:string,arg2:boolean):Promise<void>;
 
+export function SetTargetDiagramVisibility(arg1:string,arg2:boolean):Promise<void>;
+
 export function UpdateConfig(arg1:config.AppConfig):Promise<void>;

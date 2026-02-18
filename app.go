@@ -123,3 +123,11 @@ func (a *App) OpenPath(path string) {
 func (a *App) GetDiagramConfig() config.NetworkDiagramConfig {
 	return a.cfg.Data.NetworkDiagram
 }
+
+func (a *App) SetTargetDiagramVisibility(hostID string, show bool) {
+	// 1. Atualiza o estado no arquivo settings.json
+	a.cfg.UpdateTargetDiagramVisibility(hostID, show)
+
+	// 2. Se você precisar que o Service saiba disso em tempo real:
+	// a.service.ToggleDiagramStatus(hostID, show)
+}

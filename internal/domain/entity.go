@@ -14,11 +14,12 @@ type PingResult struct {
 
 // Host define um alvo para monitoramento
 type Host struct {
-	ID     string `json:"id"`
-	Name   string `json:"name"`
-	IP     string `json:"ip"`
-	IsGW   bool   `json:"isGateway"`
-	Active bool   `json:"active"` // Novo campo para controle de estado
+	ID            string `json:"id"`
+	Name          string `json:"name"`
+	IP            string `json:"ip"`
+	IsGW          bool   `json:"isGateway"`
+	Active        bool   `json:"active"`
+	ShowInDiagram bool   `json:"showInDiagram"` // Novo campo
 }
 
 // Repository define como salvamos os dados

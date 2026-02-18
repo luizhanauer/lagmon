@@ -1,4 +1,4 @@
-import { reactive } from 'vue';
+import { reactive } from "vue";
 
 export interface HostDef {
     id: string;
@@ -7,34 +7,44 @@ export interface HostDef {
     color: string;
     showGraph: boolean;
     active: boolean;
+    isGateway: boolean; // Certifique-se de que este campo existe aqui
+    showInDiagram: boolean;
     stats: { latency: number; jitter: number; loss: boolean };
 }
 
-const NEON_PALETTE = ["#00E5FF", "#D946EF", "#FACC15", "#4ADE80", "#FF5722", "#FFFFFF"];
+const NEON_PALETTE = [
+  "#00E5FF",
+  "#D946EF",
+  "#FACC15",
+  "#4ADE80",
+  "#FF5722",
+  "#FFFFFF",
+];
 
 export const store = reactive({
-    targets: [] as HostDef[],
-    
-    addTarget(id: string, ip: string, name: string, active: boolean = true) {
-        if (this.targets.find(t => t.id === id)) return;
+  targets: [] as HostDef[],
 
-        const color = NEON_PALETTE[this.targets.length % NEON_PALETTE.length];
-        this.targets.push({
-            id, ip, name, color,
-            showGraph: true, // Padrão: mostrar gráfico
-            active: active,
-            stats: { latency: 0, jitter: 0, loss: false }
-        });
-    },
+addTarget(id: string, ip: string, name: string, active: boolean, isGateway: boolean, showInDiagram: boolean) {    if (this.targets.find((t) => t.id === id)) return;
 
-    removeTarget(id: string) {
-        this.targets = this.targets.filter(t => t.id !== id);
-    },
+    const color = NEON_PALETTE[this.targets.length % NEON_PALETTE.length];
+    this.targets.push({
+        id, ip, name, color,
+        showGraph: true,
+        active: active,
+        isGateway: isGateway, // Mapeia o valor recebido
+        showInDiagram: showInDiagram,
+        stats: { latency: 0, jitter: 0, loss: false }
+    });
+  },
 
-    updateStats(hostId: string, latency: number, jitter: number, loss: boolean) {
-        const target = this.targets.find(t => t.id === hostId);
-        if (target) {
-            target.stats = { latency, jitter, loss };
-        }
+  removeTarget(id: string) {
+    this.targets = this.targets.filter((t) => t.id !== id);
+  },
+
+  updateStats(hostId: string, latency: number, jitter: number, loss: boolean) {
+    const target = this.targets.find((t) => t.id === hostId);
+    if (target) {
+      target.stats = { latency, jitter, loss };
     }
+  },
 });
