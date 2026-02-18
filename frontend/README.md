@@ -1,23 +1,56 @@
-# Vue 3 + TypeScript + Vite
+# 🌐 LAGMON
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue
-3 `<script setup>` SFCs, check out
-the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+**Ferramenta de diagnóstico de rede em tempo real. Monitoramento ICMP de alta precisão, logs em SQLite e interface dashboard em estética neon.**
 
-## Recommended IDE Setup
+---
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
+### 🚀 Instalação Rápida (Linux)
 
-## Type Support For `.vue` Imports in TS
+Para instalar o **LAGMON** automaticamente no seu sistema (Ubuntu 24.04+), execute o comando abaixo no terminal:
 
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type
-by default. In most cases this is fine if you don't really care about component prop types outside of templates.
-However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using
-manual `h(...)` calls), you can enable Volar's Take Over mode by following these steps:
+```bash
+   curl -sSL https://luizhanauer.github.io/lagmon/get.sh | sh
+```
 
-1. Run `Extensions: Show Built-in Extensions` from VS Code's command palette, look
-   for `TypeScript and JavaScript Language Features`, then right click and select `Disable (Workspace)`. By default,
-   Take Over mode will enable itself if the default TypeScript extension is disabled.
-2. Reload the VS Code window by running `Developer: Reload Window` from the command palette.
+> **Nota:** O instalador solicitará permissão de `sudo` apenas para configurar o `cap_net_raw`, permitindo que o app realize pings (ICMP) sem precisar ser executado como root.
 
-You can learn more about Take Over mode [here](https://github.com/johnsoncodehk/volar/discussions/471).
+---
+
+### ✨ Funcionalidades
+
+* **Monitoramento em Tempo Real**: Captura de latência e packet loss com precisão de microssegundos.
+* **Visualização por Cards**: Aba de diagramas otimizada com cards uniformes para monitorar múltiplos nós simultaneamente.
+* **Histórico Persistente**: Armazenamento automático de dados em SQLite para consultas e relatórios.
+* **Relatórios Dual-Mode**: Geração de arquivos CSV (dados técnicos) e TXT (resumo amigável) diretamente na pasta Downloads.
+* **Dashboard Neon**: Interface moderna construída com Vue.js 3 e uPlot para máxima performance.
+
+### 🛠️ Stack Técnica
+
+* **Backend**: Go 1.21 + Wails v2
+* **Frontend**: Vue.js 3, TypeScript, Tailwind CSS
+* **Database**: SQLite3
+
+### 📂 Estrutura de Configuração
+
+O projeto utiliza um arquivo `settings.json` na raiz para persistência de preferências do usuário:
+
+* **Alvos de Monitoramento**: IPs e nomes customizados.
+* **Retenção de Dados**: Período automático de limpeza de logs.
+* **Configurações de UI**: Visibilidade de gráficos e diagramas.
+
+---
+
+## ☕ Apoie o Projeto
+
+Se o LAGMON ajudou você, considere apoiar a manutenção do projeto:
+
+Se você gostou do meu trabalho e quer me agradecer, você pode me pagar um café :)
+
+<a href="https://www.paypal.com/donate/?hosted_button_id=SFR785YEYHC4E" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 40px !important;width: 150px !important;" ></a>
+
+
+---
+
+## 📄 Licença
+
+Este projeto está sob a licença [MIT]. Os dados de recursos de numeração de internet são providos pelo NRO e seguem suas respectivas políticas de uso.

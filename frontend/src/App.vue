@@ -101,7 +101,7 @@ onMounted(async () => {
       <div
         class="hidden md:block p-4 text-xs text-center text-gray-700 font-mono"
       >
-        v2.1 Stable
+        v1.0 Stable
       </div>
     </aside>
 

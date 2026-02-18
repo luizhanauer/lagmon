@@ -13,6 +13,9 @@
             --accent-green: #22c55e;
             --text-gray: #94a3b8;
             --border-color: #1e293b;
+            /* Cores ajustadas para o padrão Clip-Block */
+            --card-bg: #0a0a0a; 
+            --code-bg: #000000;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -42,6 +45,49 @@
 
         .tagline { color: var(--text-gray); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
 
+        /* AJUSTE: Install Section no padrão Clip-Block */
+        .install-section {
+            margin: 60px 0;
+            text-align: left;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .install-section h3 {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            color: var(--accent-green);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .code-container {
+            position: relative;
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .code-container code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+            word-break: break-all;
+        }
+
+        .code-container .prompt {
+            color: var(--accent-green);
+            margin-right: 10px;
+            user-select: none;
+        }
+
         /* Feature Grid */
         .features {
             display: grid;
@@ -52,18 +98,18 @@
         }
 
         .feature-card {
-            background: rgba(255, 255, 255, 0.02);
+            background: var(--card-bg);
             border: 1px solid var(--border-color);
             padding: 30px;
             border-radius: 16px;
-            transition: border-color 0.3s ease;
+            transition: all 0.3s ease;
         }
 
-        .feature-card:hover { border-color: var(--accent-green); }
-        .feature-card h3 { font-family: 'Fira Code', monospace; font-size: 0.9rem; color: var(--accent-green); margin-bottom: 15px; }
+        .feature-card:hover { border-color: var(--accent-green); transform: translateY(-2px); }
+        .feature-card h3 { font-family: 'Fira Code', monospace; font-size: 0.8rem; color: var(--accent-green); margin-bottom: 15px; }
         .feature-card p { font-size: 0.9rem; color: var(--text-gray); }
 
-        /* Estilo idêntico ao Clip-Block solicitado */
+        /* Donation Section idêntica ao Clip-Block */
         .donation-section {
             margin: 80px 0 40px;
             padding: 40px;
@@ -79,7 +125,7 @@
         footer {
             padding: 40px 0;
             color: #475569;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             border-top: 1px solid var(--border-color);
         }
 
@@ -91,15 +137,18 @@
             align-items: center;
             background: var(--accent-green);
             color: #000;
-            padding: 12px 24px;
+            padding: 12px 28px;
             border-radius: 8px;
-            font-weight: bold;
+            font-weight: 900;
             text-decoration: none;
             margin-top: 20px;
-            transition: transform 0.2s;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
         }
 
-        .btn-github:hover { transform: translateY(-2px); }
+        .btn-github:hover { transform: translateY(-2px); background: #4ade80; }
     </style>
 </head>
 <body>
@@ -115,6 +164,15 @@
                 Ver no GitHub
             </a>
         </header>
+
+        <section class="install-section">
+            <h3>// Quick Install</h3>
+            <div class="code-container">
+                <code>
+                    <span class="prompt">$</span>curl -sSL https://luizhanauer.github.io/lagmon/get.sh | sh
+                </code>
+            </div>
+        </section>
 
         <section class="features">
             <div class="feature-card">
