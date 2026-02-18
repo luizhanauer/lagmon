@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAGMON | Real-Time Network Monitor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050505;
+            --accent-green: #22c55e;
+            --text-gray: #94a3b8;
+            --border-color: #1e293b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-color);
+            color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; text-align: center; }
+
+        header { padding: 60px 0; }
+
+        .logo {
+            font-family: 'Fira Code', monospace;
+            font-weight: 900;
+            font-size: 3rem;
+            letter-spacing: -0.05em;
+            margin-bottom: 10px;
+        }
+
+        .logo span { color: var(--accent-green); }
+        .logo .mon { color: #475569; }
+
+        .tagline { color: var(--text-gray); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
+
+        /* Feature Grid */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 60px 0;
+            text-align: left;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            border-radius: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .feature-card:hover { border-color: var(--accent-green); }
+        .feature-card h3 { font-family: 'Fira Code', monospace; font-size: 0.9rem; color: var(--accent-green); margin-bottom: 15px; }
+        .feature-card p { font-size: 0.9rem; color: var(--text-gray); }
+
+        /* Estilo idêntico ao Clip-Block solicitado */
+        .donation-section {
+            margin: 80px 0 40px;
+            padding: 40px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .donation-text {
+            color: var(--text-gray);
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+        }
+
+        footer {
+            padding: 40px 0;
+            color: #475569;
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        footer a { color: var(--accent-green); text-decoration: none; font-weight: bold; }
+        footer a:hover { text-decoration: underline; }
+
+        .btn-github {
+            display: inline-flex;
+            align-items: center;
+            background: var(--accent-green);
+            color: #000;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-decoration: none;
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }
+
+        .btn-github:hover { transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="logo"><span>LAG</span><span class="mon">MON</span></div>
+            <p class="tagline">
+                Diagnóstico de rede em tempo real com alta precisão, 
+                visualização em estética neon e logs persistentes.
+            </p>
+            <a href="https://github.com/luizhanauer/lagmon" class="btn-github">
+                Ver no GitHub
+            </a>
+        </header>
+
+        <section class="features">
+            <div class="feature-card">
+                <h3>// REAL-TIME ICMP</h3>
+                <p>Monitoramento de latência e packet loss com precisão de microssegundos.</p>
+            </div>
+            <div class="feature-card">
+                <h3>// SQLITE STORAGE</h3>
+                <p>Histórico completo de pings persistido localmente para análise posterior.</p>
+            </div>
+            <div class="feature-card">
+                <h3>// NEON DASHBOARD</h3>
+                <p>Interface moderna baseada em uPlot para visualização fluida de Jitter e Latência.</p>
+            </div>
+        </section>
+
+        <div class="donation-section">
+            <p class="donation-text">
+                Se você gostou do meu trabalho e quer me agradecer,<br> 
+                você pode me pagar um café :)
+            </p>
+            
+            <a href="https://www.paypal.com/donate/?hosted_button_id=SFR785YEYHC4E" target="_blank">
+                <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" 
+                     alt="Buy Me A Coffee" 
+                     style="height: 50px !important; width: auto !important;">
+            </a>
+        </div>
+
+        <footer>
+            <p>Desenvolvido com 💜 por <a href="https://github.com/luizhanauer">Luiz Hanauer</a></p>
+            <p style="margin-top: 5px;"><a href="https://github.com/luizhanauer/lagmon">Ver código no GitHub</a></p>
+        </footer>
+    </div>
+
+</body>
+</html>
