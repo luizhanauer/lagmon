@@ -42,8 +42,8 @@ func main() {
 
 	// 3. Wails Run
 	err = wails.Run(&options.App{
-		Title:     "Lag Monitor Pro",
-		Width:     1024,
+		Title:     "LAGMON",
+		Width:     700,
 		Height:    768,
 		Assets:    assets,
 		OnStartup: app.startup,
