@@ -13,7 +13,6 @@
             --accent-green: #22c55e;
             --text-gray: #94a3b8;
             --border-color: #1e293b;
-            /* Cores ajustadas para o padrão Clip-Block */
             --card-bg: #0a0a0a; 
             --code-bg: #000000;
         }
@@ -45,7 +44,7 @@
 
         .tagline { color: var(--text-gray); font-size: 1.1rem; max-width: 600px; margin: 0 auto; }
 
-        /* AJUSTE: Install Section no padrão Clip-Block */
+        /* Install Section */
         .install-section {
             margin: 60px 0;
             text-align: left;
@@ -88,7 +87,22 @@
             user-select: none;
         }
 
-        /* Feature Grid */
+        .copy-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-gray);
+            cursor: pointer;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            transition: color 0.2s;
+            margin-left: 15px;
+        }
+
+        .copy-btn:hover { color: var(--accent-green); }
+        .copy-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+        /* Feature Grid com efeito Clip-Block */
         .features {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -102,14 +116,27 @@
             border: 1px solid var(--border-color);
             padding: 30px;
             border-radius: 16px;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
         }
 
-        .feature-card:hover { border-color: var(--accent-green); transform: translateY(-2px); }
-        .feature-card h3 { font-family: 'Fira Code', monospace; font-size: 0.8rem; color: var(--accent-green); margin-bottom: 15px; }
+        .feature-card:hover {
+            border-color: var(--accent-green);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px -10px rgba(34, 197, 94, 0.2);
+        }
+
+        .feature-card h3 { 
+            font-family: 'Fira Code', monospace; 
+            font-size: 0.8rem; 
+            color: var(--accent-green); 
+            margin-bottom: 15px; 
+        }
+        
         .feature-card p { font-size: 0.9rem; color: var(--text-gray); }
 
-        /* Donation Section idêntica ao Clip-Block */
+        /* Donation Section */
         .donation-section {
             margin: 80px 0 40px;
             padding: 40px;
@@ -168,9 +195,12 @@
         <section class="install-section">
             <h3>// Quick Install</h3>
             <div class="code-container">
-                <code>
-                    <span class="prompt">$</span>curl -sSL https://luizhanauer.github.io/lagmon/get.sh | sh
-                </code>
+                <code id="installCommand"><span class="prompt">$</span>curl -sSL https://luizhanauer.github.io/lagmon/get.sh | sh</code>
+                <button class="copy-btn" onclick="copyToClipboard()" title="Copiar comando">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M16 1H4C2.9 1 2 1.9 2 3V17H4V3H16V1ZM19 5H8C6.9 5 6 5.9 6 7V21C6 22.1 6.9 23 8 23H19C20.1 23 21 22.1 21 21V7C21 5.9 20.1 5 19 5ZM19 21H8V7H19V21Z"/>
+                    </svg>
+                </button>
             </div>
         </section>
 
@@ -207,6 +237,23 @@
             <p style="margin-top: 5px;"><a href="https://github.com/luizhanauer/lagmon">Ver código no GitHub</a></p>
         </footer>
     </div>
+
+    <script>
+        function copyToClipboard() {
+            const command = "curl -sSL https://luizhanauer.github.io/lagmon/get.sh | sh";
+            navigator.clipboard.writeText(command).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                const originalSvg = btn.innerHTML;
+                
+                // Feedback visual simples
+                btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="#22c55e"/></svg>';
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalSvg;
+                }, 2000);
+            });
+        }
+    </script>
 
 </body>
 </html>
