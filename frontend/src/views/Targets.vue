@@ -33,9 +33,9 @@ const remove = async (id: string) => {
     store.removeTarget(id);
 };
 
-onMounted(() => {
-    loadTargets();
-});
+// onMounted(() => {
+//     loadTargets();
+// });
 </script>
 
 <template>

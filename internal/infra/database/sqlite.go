@@ -114,3 +114,28 @@ func (r *SQLiteBatcher) Close() error {
 	r.mu.Unlock()
 	return r.db.Close()
 }
+
+// GetHistory busca registros filtrados por host e data
+func (r *SQLiteBatcher) GetHistory(hostID string, start, end time.Time) ([]domain.PingResult, error) {
+	query := `
+		SELECT host_id, latency, jitter, timestamp 
+		FROM pings 
+		WHERE host_id = ? AND timestamp BETWEEN ? AND ?
+		ORDER BY timestamp ASC`
+
+	rows, err := r.db.Query(query, hostID, start, end)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var results []domain.PingResult
+	for rows.Next() {
+		var res domain.PingResult
+		if err := rows.Scan(&res.HostID, &res.Latency, &res.Jitter, &res.Timestamp); err != nil {
+			continue
+		}
+		results = append(results, res)
+	}
+	return results, nil
+}

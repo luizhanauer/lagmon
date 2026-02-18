@@ -6,8 +6,16 @@ export function AddTarget(arg1, arg2) {
   return window['go']['main']['App']['AddTarget'](arg1, arg2);
 }
 
+export function GetReport(arg1, arg2, arg3) {
+  return window['go']['main']['App']['GetReport'](arg1, arg2, arg3);
+}
+
 export function GetTargets() {
   return window['go']['main']['App']['GetTargets']();
+}
+
+export function OpenPath(arg1) {
+  return window['go']['main']['App']['OpenPath'](arg1);
 }
 
 export function RemoveTarget(arg1) {

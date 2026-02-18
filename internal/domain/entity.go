@@ -25,6 +25,7 @@ type Host struct {
 type Repository interface {
 	SaveBatch(results []PingResult) error
 	Close() error
+	GetHistory(hostID string, start, end time.Time) ([]PingResult, error)
 }
 
 // Pinger define como executamos o ping

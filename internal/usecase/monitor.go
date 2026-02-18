@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"fmt"
 	"lag-monitor/internal/domain"
 	"math"
 	"sync"
@@ -150,4 +151,95 @@ func (s *MonitorService) runLoop(ctx context.Context, job *monitorJob) {
 			s.repo.SaveBatch([]domain.PingResult{res})
 		}
 	}
+}
+
+func (s *MonitorService) GenerateReport(hostID string, start, end time.Time) (string, error) {
+	data, err := s.repo.GetHistory(hostID, start, end)
+	if err != nil {
+		return "", err
+	}
+
+	report := "RELATÓRIO DE LATÊNCIA - LAG MONITOR\n"
+	report += "Target: " + hostID + "\n"
+	report += "Período: " + start.Format("02/01/2006 15:04") + " até " + end.Format("02/01/2006 15:04") + "\n"
+	report += "--------------------------------------------------\n"
+
+	for _, d := range data {
+		report += d.Timestamp.Format("15:04:05") + " | Lat: " +
+			fmt.Sprintf("%vms", d.Latency/1000) + " | Jitter: " +
+			fmt.Sprintf("%vms", d.Jitter/1000) + "\n"
+	}
+
+	return report, nil
+}
+
+func (s *MonitorService) GenerateDualReport(hostID string, start, end time.Time) (string, string, error) {
+	data, err := s.repo.GetHistory(hostID, start, end)
+	if err != nil {
+		return "", "", err
+	}
+
+	if len(data) == 0 {
+		return "", "", fmt.Errorf("sem dados no período")
+	}
+
+	// --- CÁLCULOS PARA O RESUMO (LEIGO) ---
+	var totalLat int64
+	var maxLat int64
+	var minLat int64 = 999999
+	var lossCount int
+
+	for _, d := range data {
+		if d.Loss {
+			lossCount++
+			continue
+		}
+		latMs := d.Latency / 1000
+		totalLat += latMs
+		if latMs > maxLat {
+			maxLat = latMs
+		}
+		if latMs < minLat {
+			minLat = latMs
+		}
+	}
+
+	count := int64(len(data) - lossCount)
+	avgLat := int64(0)
+	if count > 0 {
+		avgLat = totalLat / count
+	}
+	lossPct := (float64(lossCount) / float64(len(data))) * 100
+
+	// --- 1. RELATÓRIO AMIGÁVEL (RESUMO) ---
+	summary := fmt.Sprintf("=== RELATÓRIO DE QUALIDADE DE INTERNET ===\n")
+	summary += fmt.Sprintf("Destino: %s\n", hostID)
+	summary += fmt.Sprintf("Período: %s até %s\n", start.Format("02/01 15:04"), end.Format("02/01 15:04"))
+	summary += "------------------------------------------\n"
+	summary += fmt.Sprintf("Média de Atraso (Latência): %dms\n", avgLat)
+
+	status := "EXCELENTE"
+	if avgLat > 100 || lossPct > 2 {
+		status = "INSTÁVEL"
+	}
+	if avgLat > 200 || lossPct > 5 {
+		status = "CRÍTICO / RUIM"
+	}
+
+	summary += fmt.Sprintf("Status da Conexão: %s\n", status)
+	summary += fmt.Sprintf("Perda de Sinal: %.1f%%\n", lossPct)
+	summary += "------------------------------------------\n"
+	summary += "DICA: Valores acima de 100ms ou perdas de sinal podem causar travamentos em vídeos e jogos.\n"
+
+	// --- 2. DADOS BRUTOS (TÉCNICO) ---
+	raw := "TIMESTAMP;LATENCY_MS;JITTER_MS;LOSS\n"
+	for _, d := range data {
+		raw += fmt.Sprintf("%s;%d;%d;%v\n",
+			d.Timestamp.Format("2006-01-02 15:04:05"),
+			d.Latency/1000,
+			d.Jitter/1000,
+			d.Loss)
+	}
+
+	return summary, raw, nil
 }
