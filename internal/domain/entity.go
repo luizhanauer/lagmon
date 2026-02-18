@@ -8,8 +8,8 @@ type PingResult struct {
 	IP        string    `json:"ip"`
 	Latency   int64     `json:"latency"` // em microsegundos
 	Jitter    int64     `json:"jitter"`  // em microsegundos
-	Timestamp time.Time `json:"timestamp"`
 	Loss      bool      `json:"loss"`
+	Timestamp time.Time `json:"timestamp"`
 }
 
 // Host define um alvo para monitoramento

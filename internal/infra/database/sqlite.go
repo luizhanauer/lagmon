@@ -32,6 +32,7 @@ func NewSQLiteRepo(dbPath string) (*SQLiteBatcher, error) {
 		host_id TEXT,
 		latency INTEGER,
 		jitter INTEGER,
+		loss BOOLEAN,
 		timestamp DATETIME
 	);`
 	if _, err := db.Exec(query); err != nil {
@@ -103,14 +104,14 @@ func (r *SQLiteBatcher) flush(data []domain.PingResult) {
 		return
 	}
 
-	stmt, err := tx.Prepare("INSERT INTO pings(host_id, latency, jitter, timestamp) VALUES(?, ?, ?, ?)")
+	stmt, err := tx.Prepare("INSERT INTO pings(host_id, latency, jitter, loss, timestamp) VALUES(?, ?, ?, ?, ?)")
 	if err != nil {
 		return
 	}
 	defer stmt.Close()
 
 	for _, d := range data {
-		stmt.Exec(d.HostID, d.Latency, d.Jitter, d.Timestamp)
+		stmt.Exec(d.HostID, d.Latency, d.Jitter, d.Loss, d.Timestamp)
 	}
 	tx.Commit()
 }
@@ -128,7 +129,7 @@ func (r *SQLiteBatcher) Close() error {
 // GetHistory busca registros filtrados por host e data
 func (r *SQLiteBatcher) GetHistory(hostID string, start, end time.Time) ([]domain.PingResult, error) {
 	query := `
-		SELECT host_id, latency, jitter, timestamp 
+		SELECT host_id, latency, jitter, loss, timestamp 
 		FROM pings 
 		WHERE host_id = ? AND timestamp BETWEEN ? AND ?
 		ORDER BY timestamp ASC`
@@ -142,7 +143,7 @@ func (r *SQLiteBatcher) GetHistory(hostID string, start, end time.Time) ([]domai
 	var results []domain.PingResult
 	for rows.Next() {
 		var res domain.PingResult
-		if err := rows.Scan(&res.HostID, &res.Latency, &res.Jitter, &res.Timestamp); err != nil {
+		if err := rows.Scan(&res.HostID, &res.Latency, &res.Jitter, &res.Loss, &res.Timestamp); err != nil {
 			continue
 		}
 		results = append(results, res)

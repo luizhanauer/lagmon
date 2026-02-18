@@ -44,24 +44,27 @@ func (p *ICMPExecutor) Ping(ip string, timeout time.Duration) (int64, error) {
 	b, _ := m.Marshal(nil)
 
 	start := time.Now()
+	// Envio do pacote
 	if _, err := c.WriteTo(b, &net.UDPAddr{IP: dst.IP}); err != nil {
-		return 0, err
+		return 0, fmt.Errorf("send error: %w", err)
 	}
 
-	if err := c.SetReadDeadline(time.Now().Add(timeout)); err != nil {
-		return 0, err
-	}
+	// Define deadline para leitura
+	c.SetReadDeadline(time.Now().Add(timeout))
 
 	rb := make([]byte, 1500)
 	n, _, err := c.ReadFrom(rb)
+
+	// Captura explícita de TIMEOUT ou conexão recusada
 	if err != nil {
-		return 0, err
+		return 0, fmt.Errorf("packet loss: %w", err)
 	}
+
 	duration := time.Since(start)
 
 	rm, err := icmp.ParseMessage(1, rb[:n])
 	if err != nil || rm.Type != ipv4.ICMPTypeEchoReply {
-		return 0, fmt.Errorf("invalid reply")
+		return 0, fmt.Errorf("invalid icmp reply")
 	}
 
 	return duration.Microseconds(), nil

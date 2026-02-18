@@ -2,12 +2,22 @@
 import { onMounted, ref } from 'vue';
 import uPlot from 'uplot';
 import 'uplot/dist/uPlot.min.css';
+// import { watch } from 'vue';
 
 const props = defineProps<{
     targetId: string;
     targetName: string;
     color: string;
 }>();
+
+// watch(() => props.color, (newColor) => {
+//     if (uplotInst) {
+//         // Atualiza a cor da série de latência (índice 1) sem destruir o gráfico
+//         uplotInst.series[1].stroke = newColor;
+//         uplotInst.series[1].fill = newColor + "15";
+//         uplotInst.redraw();
+//     }
+// });
 
 const chartRef = ref<HTMLElement>();
 let uplotInst: uPlot | null = null;
@@ -54,8 +64,8 @@ const initChart = () => {
                 width: 2,
                 fill: props.color + "15",
                 points: { show: false },
-                value: (u, v) => v == null ? "-" : v.toFixed(1) + "ms"
-            },
+                spanGaps: false,
+                value: (u, v) => v == null ? "TIMEOUT" : v.toFixed(1) + "ms"            },
             {
                 label: "Jitter",
                 stroke: "#ffffff",
@@ -95,14 +105,16 @@ const handleEvent = (payload: any) => {
     if (!uplotInst) return;
 
     const now = Math.floor(Date.now() / 1000);
-    const lat = payload.loss ? null : payload.latency / 1000;
-    const jit = payload.loss ? null : payload.jitter / 1000;
+    
+    // Tratamento robusto para Packet Loss
+    const isLoss = payload.loss === true;
+    const lat = isLoss ? null : payload.latency / 1000;
+    const jit = isLoss ? null : payload.jitter / 1000;
 
     data[0].push(now);
     data[1].push(lat);
     data[2].push(jit);
 
-    // Mantém histórico de 60 segundos
     if (data[0].length > 60) {
         data.forEach(ch => ch.shift());
     }

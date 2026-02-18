@@ -121,32 +121,36 @@ func (s *MonitorService) runLoop(ctx context.Context, job *monitorJob) {
 		case <-ctx.Done():
 			return
 		case <-ticker.C:
-			// Se estiver pausado, não faz nada mas mantém o loop vivo
 			if !job.active {
 				continue
 			}
 
+			// Executa o Ping
 			lat, err := s.pinger.Ping(job.host.IP, 900*time.Millisecond)
 
 			res := domain.PingResult{
 				HostID:    job.host.ID,
 				IP:        job.host.IP,
 				Timestamp: time.Now(),
-				Loss:      err != nil,
+				Loss:      err != nil, // Se houver erro, Loss é true
 			}
 
 			if err == nil {
 				res.Latency = lat
+				// Cálculo de Jitter: Só calcula se o pacote anterior E o atual forem bem sucedidos
 				if job.lastLat > 0 {
 					res.Jitter = int64(math.Abs(float64(lat - job.lastLat)))
 				}
 				job.lastLat = lat
 			} else {
+				// IMPORTANTE: Em caso de LOSS, resetamos o lastLat para não calcular
+				// jitter inválido no próximo ping bem sucedido.
 				job.lastLat = 0
-				res.Latency = 0
+				res.Latency = 0 // Latência 0 indica tecnicamente indisponível
 				res.Jitter = 0
 			}
 
+			// Emite para o frontend e salva no banco
 			s.emit("ping:data", res)
 			s.repo.SaveBatch([]domain.PingResult{res})
 		}
