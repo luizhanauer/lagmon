@@ -5,6 +5,7 @@ import Dashboard from "./views/Dashboard.vue";
 import Targets from "./views/Targets.vue";
 import { GetTargets } from "../wailsjs/go/main/App";
 import Reports from "./views/Reports.vue";
+import Settings from "./views/Settings.vue";
 
 const currentView = ref("dashboard");
 
@@ -12,6 +13,7 @@ const views: any = {
   dashboard: Dashboard,
   targets: Targets,
   reports: Reports,
+  settings: Settings
 };
 
 onMounted(async () => {
@@ -73,6 +75,13 @@ onMounted(async () => {
           >
             <span>📄</span>
             <span class="hidden md:block font-mono text-sm">Reports</span>
+          </button>
+          <button
+            @click="currentView = 'settings'"
+            :class="`w-full flex items-center gap-4 px-4 py-3 rounded-lg transition-all ${currentView === 'settings' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'hover:bg-gray-900 text-gray-500'}`"
+          >
+            <span>⚙️</span>
+            <span class="hidden md:block font-mono text-sm">Settings</span>
           </button>
         </nav>
       </div>

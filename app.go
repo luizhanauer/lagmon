@@ -15,15 +15,17 @@ import (
 type App struct {
 	ctx     context.Context
 	service *usecase.MonitorService
+	repo    domain.Repository
 }
 
-func NewApp(svc *usecase.MonitorService) *App {
-	return &App{service: svc}
+func NewApp(svc *usecase.MonitorService, r domain.Repository) *App {
+	return &App{service: svc, repo: r}
 }
 
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 
+	a.service.StartRetentionPolicy()
 	// Hosts Padrão
 	a.service.AddHost(domain.Host{
 		ID: "gateway", Name: "Gateway", IP: "192.168.1.1", IsGW: true, Active: true,
@@ -95,4 +97,12 @@ func (a *App) OpenPath(path string) {
 	if cmd != nil {
 		cmd.Run()
 	}
+}
+
+func (a *App) SaveSetting(key, value string) error {
+	return a.repo.SetSetting(key, value)
+}
+
+func (a *App) GetSetting(key string) (string, error) {
+	return a.repo.GetSetting(key)
 }

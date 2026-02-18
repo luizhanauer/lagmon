@@ -17,11 +17,10 @@ var assets embed.FS
 
 func main() {
 	// 1. Infra
-	db, err := database.NewSQLiteRepo("history.db")
+	repo, err := database.NewSQLiteRepo("./lagmonitor.db")
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.Close()
 
 	pinger := network.NewPinger()
 
@@ -38,8 +37,8 @@ func main() {
 		}
 	}
 
-	svc := usecase.NewMonitorService(db, pinger, emitter)
-	app = NewApp(svc)
+	service := usecase.NewMonitorService(repo, pinger, emitter)
+	app = NewApp(service, repo)
 
 	// 3. Wails Run
 	err = wails.Run(&options.App{

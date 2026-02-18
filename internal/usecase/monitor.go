@@ -243,3 +243,29 @@ func (s *MonitorService) GenerateDualReport(hostID string, start, end time.Time)
 
 	return summary, raw, nil
 }
+
+func (s *MonitorService) StartRetentionPolicy() {
+	ticker := time.NewTicker(1 * time.Hour)
+
+	go func() {
+		// O loop 'range' aguarda o canal enviar o sinal a cada 1 hora
+		for range ticker.C {
+			s.runCleanup()
+		}
+	}()
+}
+
+// Extraído para uma função menor (Clean Code/Single Responsibility)
+func (s *MonitorService) runCleanup() {
+	daysStr, err := s.repo.GetSetting("retention_days")
+	if err != nil {
+		return
+	}
+
+	var days int
+	if _, err := fmt.Sscanf(daysStr, "%d", &days); err != nil {
+		return
+	}
+
+	s.repo.CleanOldData(days)
+}

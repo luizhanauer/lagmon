@@ -1,5 +1,5 @@
 build/bin
 node_modules
 frontend/dist
-history.db
+*.db
 history.db-journal

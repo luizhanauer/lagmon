@@ -10,6 +10,10 @@ export function GetReport(arg1, arg2, arg3) {
   return window['go']['main']['App']['GetReport'](arg1, arg2, arg3);
 }
 
+export function GetSetting(arg1) {
+  return window['go']['main']['App']['GetSetting'](arg1);
+}
+
 export function GetTargets() {
   return window['go']['main']['App']['GetTargets']();
 }
@@ -20,6 +24,10 @@ export function OpenPath(arg1) {
 
 export function RemoveTarget(arg1) {
   return window['go']['main']['App']['RemoveTarget'](arg1);
+}
+
+export function SaveSetting(arg1, arg2) {
+  return window['go']['main']['App']['SaveSetting'](arg1, arg2);
 }
 
 export function SetTargetActive(arg1, arg2) {

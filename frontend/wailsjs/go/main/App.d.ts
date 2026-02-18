@@ -6,10 +6,14 @@ export function AddTarget(arg1:string,arg2:string):Promise<domain.Host>;
 
 export function GetReport(arg1:string,arg2:string,arg3:string):Promise<string>;
 
+export function GetSetting(arg1:string):Promise<string>;
+
 export function GetTargets():Promise<Array<domain.Host>>;
 
 export function OpenPath(arg1:string):Promise<void>;
 
 export function RemoveTarget(arg1:string):Promise<void>;
+
+export function SaveSetting(arg1:string,arg2:string):Promise<void>;
 
 export function SetTargetActive(arg1:string,arg2:boolean):Promise<void>;

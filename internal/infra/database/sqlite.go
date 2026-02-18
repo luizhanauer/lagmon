@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 	"lag-monitor/internal/domain"
 	"sync"
 	"time"
@@ -34,6 +35,15 @@ func NewSQLiteRepo(dbPath string) (*SQLiteBatcher, error) {
 		timestamp DATETIME
 	);`
 	if _, err := db.Exec(query); err != nil {
+		return nil, err
+	}
+
+	querySettings := `
+	CREATE TABLE IF NOT EXISTS settings (
+		key TEXT PRIMARY KEY,
+		value TEXT
+	);`
+	if _, err := db.Exec(querySettings); err != nil {
 		return nil, err
 	}
 
@@ -138,4 +148,25 @@ func (r *SQLiteBatcher) GetHistory(hostID string, start, end time.Time) ([]domai
 		results = append(results, res)
 	}
 	return results, nil
+}
+
+// CleanOldData remove registros mais antigos que o número de dias especificado
+func (r *SQLiteBatcher) CleanOldData(days int) (int64, error) {
+	result, err := r.db.Exec("DELETE FROM pings WHERE timestamp < datetime('now', ?)", fmt.Sprintf("-%d days", days))
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected()
+}
+
+// Métodos para gerenciar configurações
+func (r *SQLiteBatcher) SetSetting(key, value string) error {
+	_, err := r.db.Exec("INSERT OR REPLACE INTO settings (key, value) VALUES (?, ?)", key, value)
+	return err
+}
+
+func (r *SQLiteBatcher) GetSetting(key string) (string, error) {
+	var value string
+	err := r.db.QueryRow("SELECT value FROM settings WHERE key = ?", key).Scan(&value)
+	return value, err
 }

@@ -26,6 +26,9 @@ type Repository interface {
 	SaveBatch(results []PingResult) error
 	Close() error
 	GetHistory(hostID string, start, end time.Time) ([]PingResult, error)
+	CleanOldData(days int) (int64, error)
+	SetSetting(key, value string) error
+	GetSetting(key string) (string, error)
 }
 
 // Pinger define como executamos o ping
