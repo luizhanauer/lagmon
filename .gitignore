@@ -3,3 +3,4 @@ node_modules
 frontend/dist
 *.db
 history.db-journal
+settings.json

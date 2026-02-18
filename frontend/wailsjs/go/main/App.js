@@ -6,12 +6,16 @@ export function AddTarget(arg1, arg2) {
   return window['go']['main']['App']['AddTarget'](arg1, arg2);
 }
 
-export function GetReport(arg1, arg2, arg3) {
-  return window['go']['main']['App']['GetReport'](arg1, arg2, arg3);
+export function GetConfig() {
+  return window['go']['main']['App']['GetConfig']();
 }
 
-export function GetSetting(arg1) {
-  return window['go']['main']['App']['GetSetting'](arg1);
+export function GetDiagramConfig() {
+  return window['go']['main']['App']['GetDiagramConfig']();
+}
+
+export function GetReport(arg1, arg2, arg3) {
+  return window['go']['main']['App']['GetReport'](arg1, arg2, arg3);
 }
 
 export function GetTargets() {
@@ -26,10 +30,10 @@ export function RemoveTarget(arg1) {
   return window['go']['main']['App']['RemoveTarget'](arg1);
 }
 
-export function SaveSetting(arg1, arg2) {
-  return window['go']['main']['App']['SaveSetting'](arg1, arg2);
-}
-
 export function SetTargetActive(arg1, arg2) {
   return window['go']['main']['App']['SetTargetActive'](arg1, arg2);
+}
+
+export function UpdateConfig(arg1) {
+  return window['go']['main']['App']['UpdateConfig'](arg1);
 }

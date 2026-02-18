@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"lag-monitor/internal/config"
 	"lag-monitor/internal/domain"
 	"lag-monitor/internal/usecase"
 	"os"
@@ -16,46 +17,68 @@ type App struct {
 	ctx     context.Context
 	service *usecase.MonitorService
 	repo    domain.Repository
+	cfg     *config.ConfigManager
 }
 
-func NewApp(svc *usecase.MonitorService, r domain.Repository) *App {
-	return &App{service: svc, repo: r}
+func NewApp(svc *usecase.MonitorService, r domain.Repository, cfg *config.ConfigManager) *App {
+	return &App{
+		service: svc,
+		repo:    r,
+		cfg:     cfg,
+	}
 }
 
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 
 	a.service.StartRetentionPolicy()
-	// Hosts Padrão
-	a.service.AddHost(domain.Host{
-		ID: "gateway", Name: "Gateway", IP: "192.168.1.1", IsGW: true, Active: true,
-	})
-	a.service.AddHost(domain.Host{
-		ID: "google", Name: "Google DNS", IP: "8.8.8.8", IsGW: false, Active: true,
-	})
+
+	if err := a.cfg.Load(); err != nil {
+		fmt.Println("Erro ao carregar config:", err)
+	}
+
+	for _, target := range a.cfg.Data.Targets {
+		a.service.AddHost(target)
+	}
 }
 
-// Métodos JS
+// --- NOVOS MÉTODOS PARA PERSISTÊNCIA NO SETTINGS.JSON ---
+
+// GetConfig exporta a configuração atual do arquivo para o frontend
+func (a *App) GetConfig() config.AppConfig {
+	return a.cfg.Data
+}
+
+// UpdateConfig recebe a configuração do frontend e salva no settings.json
+func (a *App) UpdateConfig(newCfg config.AppConfig) error {
+	a.cfg.UpdateConfig(newCfg)
+	return a.cfg.Save()
+}
+
+// --- MÉTODOS JS EXISTENTES ---
 
 func (a *App) AddTarget(ip string, name string) domain.Host {
 	host := domain.Host{
 		ID: ip, Name: name, IP: ip, IsGW: false, Active: true,
 	}
+
 	a.service.AddHost(host)
+	a.cfg.AddTarget(host)
 	return host
 }
 
 func (a *App) RemoveTarget(hostID string) {
 	a.service.RemoveHost(hostID)
+	a.cfg.RemoveTarget(hostID)
 }
 
 func (a *App) GetTargets() []domain.Host {
 	return a.service.GetAllHosts()
 }
 
-// SetTargetActive controla o ping no backend
 func (a *App) SetTargetActive(hostID string, active bool) {
 	a.service.ToggleHostStatus(hostID, active)
+	a.cfg.UpdateTargetStatus(hostID, active)
 }
 
 func (a *App) GetReport(hostID string, startStr, endStr string) (string, error) {
@@ -77,7 +100,6 @@ func (a *App) GetReport(hostID string, startStr, endStr string) (string, error) 
 	rawPath := filepath.Join(home, "Downloads", fmt.Sprintf("DADOS-TECNICOS-%s-%d.csv", hostID, timestamp))
 	os.WriteFile(rawPath, []byte(raw), 0644)
 
-	// RETORNE APENAS O CAMINHO DO ARQUIVO
 	return summaryPath, nil
 }
 
@@ -86,10 +108,9 @@ func (a *App) OpenPath(path string) {
 
 	switch runtime.GOOS {
 	case "linux":
-		// No Ubuntu, xdg-open decide se abre a pasta ou o arquivo
 		cmd = exec.Command("xdg-open", path)
 	case "windows":
-		cmd = exec.Command("explorer", path)
+		cmd = exec.Command("rundll32.exe", "url.dll,FileProtocolHandler", path)
 	case "darwin":
 		cmd = exec.Command("open", path)
 	}
@@ -99,10 +120,6 @@ func (a *App) OpenPath(path string) {
 	}
 }
 
-func (a *App) SaveSetting(key, value string) error {
-	return a.repo.SetSetting(key, value)
-}
-
-func (a *App) GetSetting(key string) (string, error) {
-	return a.repo.GetSetting(key)
+func (a *App) GetDiagramConfig() config.NetworkDiagramConfig {
+	return a.cfg.Data.NetworkDiagram
 }
