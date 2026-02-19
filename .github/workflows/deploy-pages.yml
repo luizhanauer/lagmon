@@ -25,16 +25,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-      
-      - name: Build Wails Frontend
-        run: |
-          npm ci
-          npm run build
-      
       - name: Inject Portfolio Screenshots
         run: |
           mkdir -p docs/assets
