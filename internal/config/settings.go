@@ -4,10 +4,16 @@ import (
 	"encoding/json"
 	"lag-monitor/internal/domain"
 	"os"
+	"path/filepath"
 	"sync"
 )
 
-const ConfigFile = "settings.json"
+func GetConfigPath() string {
+	home, _ := os.UserHomeDir()
+	dir := filepath.Join(home, ".config", "lagmon")
+	os.MkdirAll(dir, 0755)
+	return filepath.Join(dir, "settings.json")
+}
 
 // Estrutura do Diagrama (Visualização)
 type DiagramNode struct {
@@ -42,7 +48,8 @@ func (c *ConfigManager) Load() error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
-	file, err := os.ReadFile(ConfigFile)
+	path := GetConfigPath()
+	file, err := os.ReadFile(path)
 	if os.IsNotExist(err) {
 		// Cria Defaults
 		c.Data = AppConfig{
@@ -75,7 +82,7 @@ func (c *ConfigManager) Save() error {
 	if err != nil {
 		return err
 	}
-	return os.WriteFile(ConfigFile, data, 0644)
+	return os.WriteFile(GetConfigPath(), data, 0644)
 }
 
 // Helpers para atualizar alvos e salvar

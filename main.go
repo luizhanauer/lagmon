@@ -18,7 +18,8 @@ var assets embed.FS
 
 func main() {
 	// 1. Infra - Banco de Dados
-	repo, err := database.NewSQLiteRepo("./lagmonitor.db")
+	dbPath := database.GetDatabasePath()
+	repo, err := database.NewSQLiteRepo(dbPath)
 	if err != nil {
 		log.Fatal(err)
 	}

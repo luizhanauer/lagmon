@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	"lag-monitor/internal/domain"
+	"os"
+	"path/filepath"
 	"sync"
 	"time"
 
@@ -170,4 +172,11 @@ func (r *SQLiteBatcher) GetSetting(key string) (string, error) {
 	var value string
 	err := r.db.QueryRow("SELECT value FROM settings WHERE key = ?", key).Scan(&value)
 	return value, err
+}
+
+func GetDatabasePath() string {
+	home, _ := os.UserHomeDir()
+	dir := filepath.Join(home, ".local", "share", "lagmon")
+	os.MkdirAll(dir, 0755)
+	return filepath.Join(dir, "lagmonitor.db")
 }
