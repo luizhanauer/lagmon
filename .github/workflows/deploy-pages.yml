@@ -31,20 +31,19 @@ jobs:
           node-version: "20"
       
       - name: Build Wails Frontend
-        working-directory: ./frontend
         run: |
           npm ci
           npm run build
       
       - name: Inject Portfolio Screenshots
         run: |
-          mkdir -p frontend/dist/assets
-          cp -r portfolio-assets/* frontend/dist/assets/ || true
+          mkdir -p docs/assets
+          cp -r portfolio-assets/* docs/assets/ || true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './frontend/dist'
+          path: './docs'
 
       - name: Deploy to GitHub Pages
         id: deployment
