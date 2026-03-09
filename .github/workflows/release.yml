@@ -49,10 +49,12 @@ jobs:
             cp lagmon dist/bin/
           fi
 
-          cp install.sh dist/
+          cp scripts/* dist/
+
           [ -f "appicon.png" ] && cp appicon.png dist/
 
           chmod +x dist/install.sh
+          chmod +x dist/uninstall.sh
           chmod +x dist/bin/lagmon
 
           FILENAME="lagmon_linux_amd64.tar.gz"
